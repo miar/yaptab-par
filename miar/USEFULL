@@ -1,0 +1,1 @@
+del * ; ../yaptab-par/configure   --disable-myddas --enable-tabling --enable-or-parallelism=copy --with-readline=no   --prefix=$PWD ; make depend ; make -j 8 ; make install
