@@ -324,6 +324,8 @@ DumpActiveGoals ( USES_REGS1 )
 static void
 detect_bug_location(yamop *yap_pc, find_pred_type where_from, char *tp, int psize)
 {
+
+
   Atom pred_name;
   UInt pred_arity;
   Term pred_module;
