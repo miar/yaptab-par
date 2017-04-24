@@ -1165,7 +1165,6 @@ void Yap_init_yapor_workers(void) {
       InitWorker(worker_id);
       
 #ifdef OUTPUT_WORKERS_TABLING
-      /////////////// HERE
       char worker_name[25];
       char filename[YAP_FILENAME_MAX];
       sprintf(worker_name, "/output_worker_%d", worker_id);
