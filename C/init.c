@@ -1172,8 +1172,10 @@ void Yap_init_yapor_workers(void) {
       strcpy(filename, YAP_BINDIR);
       strncat(filename, worker_name, 25);
       LOCAL_worker_output = fopen(filename, "w+");
-	      
-      printf("open %p %s \n", LOCAL_worker_output, filename); 
+      //fprintf(LOCAL_worker_output, "ola %d\n", worker_id);
+      //fflush(LOCAL_worker_output);
+      //fclose(LOCAL_worker_output); //  I must close this at the end for each process...
+      //printf("open %p %s \n", LOCAL_worker_output, filename); 
 #endif /* OUTPUT_WORKERS_TABLING */
       break;
     } else
@@ -1471,6 +1473,20 @@ void
 Yap_exit (int value)
 {
   CACHE_REGS
+
+#ifdef OUTPUT_WORKERS_TABLING
+    /////////////// HERE
+    
+    /*   int proc; */
+    /* printf("GLOBAL_number_workers = %d\n", GLOBAL_number_workers); */
+    /* for (proc = 1; proc < GLOBAL_number_workers; proc++) { */
+    /*   printf("close %p\n", REMOTE_worker_output(proc));  */
+    /*   fclose(REMOTE_worker_output(proc)); */
+    /* } */
+#endif /*OUTPUT_WORKERS_TABLING */
+
+
+    
   void closeFiles(int all);
 #if defined(YAPOR_COPY) || defined(YAPOR_COW) || defined(YAPOR_SBA)
   Yap_unmap_yapor_memory();
@@ -1484,19 +1500,7 @@ Yap_exit (int value)
     run_halt_hooks(value);
     Yap_ShutdownLoadForeign();
   }
-
-#ifdef OUTPUT_WORKERS_TABLING
-  /////////////// HERE
-  
-  int proc;
-  printf("GLOBAL_number_workers = %d\n", GLOBAL_number_workers);
-  for (proc = 1; proc < GLOBAL_number_workers; proc++) {
-    printf("close %p\n", REMOTE_worker_output(proc)); 
-    //fclose(REMOTE_worker_output(proc));
-  }
-#endif /*OUTPUT_WORKERS_TABLING */
-  
-  
+ 
   closeFiles(TRUE);
   exit(value);
 }
