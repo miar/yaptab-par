@@ -1157,24 +1157,24 @@ void Yap_init_yapor_workers(void) {
     if (son == -1)
       Yap_Error(FATAL_ERROR, TermNil, "fork error (Yap_init_yapor_workers)");
     if (son == 0) { 
-      /* new worker */
-      
-#ifdef OUTPUT_PROCESS_TABLING
-      char thread_name[25];
-      char filename[YAP_FILENAME_MAX];
-      sprintf(thread_name, "/thread_output_%d", myworker_id);
-      strcpy(filename, YAP_BINDIR);
-      strncat(filename, thread_name, 25);
-      LOCAL_thread_output = fopen(filename, "w");
-#endif /* OUTPUT_PROCESS_TABLING */
-  
-
-      
+      /* new worker */      
       worker_id = proc;
       Yap_remap_yapor_memory();
       LOCAL = REMOTE(worker_id);
       memcpy(REMOTE(worker_id), REMOTE(0), sizeof(struct worker_local));
       InitWorker(worker_id);
+      
+#ifdef OUTPUT_WORKERS_TABLING
+      /////////////// HERE
+      char worker_name[25];
+      char filename[YAP_FILENAME_MAX];
+      sprintf(worker_name, "/output_worker_%d", worker_id);
+      strcpy(filename, YAP_BINDIR);
+      strncat(filename, worker_name, 25);
+      LOCAL_worker_output = fopen(filename, "w+");
+	      
+      printf("open %p %s \n", LOCAL_worker_output, filename); 
+#endif /* OUTPUT_WORKERS_TABLING */
       break;
     } else
       GLOBAL_worker_pid(proc) = son;
@@ -1484,6 +1484,19 @@ Yap_exit (int value)
     run_halt_hooks(value);
     Yap_ShutdownLoadForeign();
   }
+
+#ifdef OUTPUT_WORKERS_TABLING
+  /////////////// HERE
+  
+  int proc;
+  printf("GLOBAL_number_workers = %d\n", GLOBAL_number_workers);
+  for (proc = 1; proc < GLOBAL_number_workers; proc++) {
+    printf("close %p\n", REMOTE_worker_output(proc)); 
+    //fclose(REMOTE_worker_output(proc));
+  }
+#endif /*OUTPUT_WORKERS_TABLING */
+  
+  
   closeFiles(TRUE);
   exit(value);
 }

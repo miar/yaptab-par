@@ -554,3 +554,16 @@ extern int Yap_page_size;
 #define INFO_THREADS(MESG, ARGS...)
 #define INFO_THREADS_MAIN_THREAD(MESSAGE, ARGS...)
 #endif /* OUTPUT_THREADS_TABLING */
+
+
+#ifdef OUTPUT_WORKER_TABLING
+#define INFO_WORKERS(MESSAGE, ARGS...)                                  \
+        fprintf(LOCAL_thread_output, "[ " MESSAGE " ]\n", ##ARGS)
+#define INFO_WORKERS_MAIN_WORKER(MESSAGE, ARGS...)                      \
+        Sfprintf(Serror, "[ " MESSAGE " ]\n", ##ARGS)
+#else
+#define INFO_WORKERS(MESG, ARGS...)
+#define INFO_WORKERS_MAIN_WORKER(MESSAGE, ARGS...)
+#endif /* OUTPUT_THREADS_TABLING */
+
+

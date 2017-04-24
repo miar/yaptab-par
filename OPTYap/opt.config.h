@@ -147,15 +147,12 @@
 **      enable output checking ? (optional)      **
 **************************************************/
 /* #define OUTPUT_THREADS_TABLING 1 */
-
-//#define OUTPUT_PROCESS_TABLING 1
+#define OUTPUT_WORKERS_TABLING 1
 
 /*********************************************************
 **      support rational terms ? (optional)      **
 *********************************************************/
 #define TRIE_RATIONAL_TERMS 1
-
-
 
 
 /************************************************************************
