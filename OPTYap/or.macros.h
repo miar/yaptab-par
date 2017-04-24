@@ -335,6 +335,7 @@ void SCH_new_alternative(yamop *curpc, yamop *new) {
   CACHE_REGS
   OrFr_alternative(LOCAL_top_or_fr) = new;
   BRANCH(worker_id, OrFr_depth(LOCAL_top_or_fr)) = YAMOP_OR_ARG(curpc);
+  printf("UNLOCK LOCAL_top_or_fr = %p\n", LOCAL_top_or_fr);
   UNLOCK_OR_FRAME(LOCAL_top_or_fr);
   return;
 }

@@ -1150,13 +1150,26 @@ void Yap_init_yapor_workers(void) {
       GLOBAL_worker_pid(0) = getpid();
   }
 #endif /* YAPOR_COW */
-  for (proc = 1; proc < GLOBAL_number_workers; proc++) {
+  
+  for (proc = 1; proc < GLOBAL_number_workers; proc++) {    
     int son;
     son = fork();
     if (son == -1)
       Yap_Error(FATAL_ERROR, TermNil, "fork error (Yap_init_yapor_workers)");
     if (son == 0) { 
       /* new worker */
+      
+#ifdef OUTPUT_PROCESS_TABLING
+      char thread_name[25];
+      char filename[YAP_FILENAME_MAX];
+      sprintf(thread_name, "/thread_output_%d", myworker_id);
+      strcpy(filename, YAP_BINDIR);
+      strncat(filename, thread_name, 25);
+      LOCAL_thread_output = fopen(filename, "w");
+#endif /* OUTPUT_PROCESS_TABLING */
+  
+
+      
       worker_id = proc;
       Yap_remap_yapor_memory();
       LOCAL = REMOTE(worker_id);
