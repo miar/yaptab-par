@@ -113,8 +113,8 @@ static inline qg_sol_fr_ptr CUT_prune_solution_frames(qg_sol_fr_ptr, int);
 
 #define worker_offset(X)	  ((GLOBAL_number_workers + X - worker_id) % GLOBAL_number_workers * Yap_worker_area_size)
 
-#define LOCK_OR_FRAME(fr)      LOCK(OrFr_lock(fr))
-#define UNLOCK_OR_FRAME(fr)  UNLOCK(OrFr_lock(fr))
+#define LOCK_OR_FRAME(fr)      LOCK(OrFr_lock(fr));INFO_WORKERS("LOCK   fr = %p",fr)
+#define UNLOCK_OR_FRAME(fr)  UNLOCK(OrFr_lock(fr));INFO_WORKERS("UNLOCK fr = %p", fr)
 
 #define LOCK_WORKER(w)        LOCK(REMOTE_lock(w))
 #define UNLOCK_WORKER(w)    UNLOCK(REMOTE_lock(w))
@@ -334,8 +334,8 @@ static inline
 void SCH_new_alternative(yamop *curpc, yamop *new) {
   CACHE_REGS
   OrFr_alternative(LOCAL_top_or_fr) = new;
-  BRANCH(worker_id, OrFr_depth(LOCAL_top_or_fr)) = YAMOP_OR_ARG(curpc);
-  INFO_WORKERS("UNLOCK LOCAL_top_or_fr = %p\n", LOCAL_top_or_fr);
+  BRANCH(worker_id, OrFr_depth(LOCAL_top_or_fr)) = YAMOP_OR_ARG(curpc);  
+  //INFO_WORKERS("UNLOCK LOCAL_top_or_fr = %p", LOCAL_top_or_fr);
   UNLOCK_OR_FRAME(LOCAL_top_or_fr);
   return;
 }

@@ -43,6 +43,7 @@
 
   PBOp(getwork,Otapl)
 #ifdef TABLING
+
     if (DepFr_leader_cp(LOCAL_top_dep_fr) == Get_LOCAL_top_cp()) {
       /* the current top node is a leader node with consumer nodes below */
       if (DepFr_leader_dep_is_on_stack(LOCAL_top_dep_fr)) {
@@ -75,10 +76,10 @@
         UNLOCK_OR_FRAME(LOCAL_top_or_fr);
 */
       }
+      INFO_WORKERS("goto completion");
       goto completion;
     }
 #endif /* TABLING */
-    INFO_WORKERS("LOCAL_top_or_fr = %p\n", LOCAL_top_or_fr);
     LOCK_OR_FRAME(LOCAL_top_or_fr);
 
     if (OrFr_alternative(LOCAL_top_or_fr)) {

@@ -1150,6 +1150,21 @@ void Yap_init_yapor_workers(void) {
       GLOBAL_worker_pid(0) = getpid();
   }
 #endif /* YAPOR_COW */
+
+#ifdef OUTPUT_WORKERS_TABLING
+      char worker_name[25];
+      char filename[YAP_FILENAME_MAX];
+      sprintf(worker_name, "/output_worker_%d", worker_id);
+      strcpy(filename, YAP_BINDIR);
+      strncat(filename, worker_name, 25);
+      LOCAL_worker_output = fopen(filename, "w+");
+      //fprintf(LOCAL_worker_output, "ola %d\n", worker_id);
+      //fflush(LOCAL_worker_output);
+      //fclose(LOCAL_worker_output); //  I must close this at the end for each process...
+      //printf("open %p %s \n", LOCAL_worker_output, filename); 
+#endif /* OUTPUT_WORKERS_TABLING */
+
+  
   
   for (proc = 1; proc < GLOBAL_number_workers; proc++) {    
     int son;
@@ -1165,8 +1180,6 @@ void Yap_init_yapor_workers(void) {
       InitWorker(worker_id);
       
 #ifdef OUTPUT_WORKERS_TABLING
-      char worker_name[25];
-      char filename[YAP_FILENAME_MAX];
       sprintf(worker_name, "/output_worker_%d", worker_id);
       strcpy(filename, YAP_BINDIR);
       strncat(filename, worker_name, 25);
